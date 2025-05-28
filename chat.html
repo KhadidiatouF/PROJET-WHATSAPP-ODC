@@ -1,0 +1,291 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJET CHAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    
+    
+</head>
+<body class="bg-[#F9F7F5] h-full flex">
+        <div id="sidebar" class="sidebar bg-[#F0EFE8] w-[120px] h-[890px]  flex flex-col items-center justify-center space-y-2" >
+            <button  tabindex="0" class="border-2 border-[#D9D5AC] w-[100px] h-[90px] flex flex-col  justify-center items-center rounded-[10px] hover:bg-orange-400 focus:outline-none  focus:outline-2 focus:outline-offset-2 focus:outline-orange-400 active:bg-orange-400  focus:bg-orange-400 ">
+                <i class="fa-solid fa-message"></i>
+                <h3 class="text-xm font-bold">Messages</h3>
+                
+            </button>
+
+            <button  tabindex="0" class="border-2 border-[#D9D5AC] w-[100px] h-[90px] flex flex-col  justify-center items-center rounded-[10px] hover:bg-orange-400 focus:outline-none  focus:outline-2 focus:outline-offset-2 focus:outline-orange-400 active:bg-orange-400  focus:bg-orange-400 ">
+                <i class="fa-solid fa-user-group"></i>
+                <h3 class="text-xm font-bold">Groupe</h3>
+
+            </button>
+
+            <button  tabindex="0" class="border-2 border-[#D9D5AC] w-[100px] h-[90px] flex flex-col  justify-center items-center rounded-[10px] hover:bg-orange-400 focus:outline-none  focus:outline-2 focus:outline-offset-2 focus:outline-orange-400 active:bg-orange-400  focus:bg-orange-400 ">
+                <i class="fa-solid fa-arrows-turn-to-dots"></i>
+                <h3 class="text-xm font-bold">Diffusions</h3>
+
+            </button>
+
+            <button  tabindex="0" class="border-2 border-[#D9D5AC] w-[100px] h-[90px] flex flex-col  justify-center items-center rounded-[10px] hover:bg-orange-400 focus:outline-none  focus:outline-2 focus:outline-offset-2 focus:outline-orange-400 active:bg-orange-400  focus:bg-orange-400 ">
+                <i class="fa-solid fa-box-archive"></i>
+                <h3 class="text-xm font-bold">Archives</h3>
+
+
+            </button>
+
+            <button  tabindex="0" class="border-2 border-[#D9D5AC] w-[100px] h-[90px] flex flex-col  justify-center items-center rounded-[10px] hover:bg-orange-400 focus:outline-none  focus:outline-2 focus:outline-offset-2 focus:outline-orange-400 active:bg-orange-400  focus:bg-orange-400 ">
+                <i class="fa-solid fa-plus text-xl"></i>
+                <h3 class="text-xm font-bold">Nouveau</h3>
+
+            </button>
+
+        </div>
+
+        <div  class=" bg-[#F9F7F5] w-[700px] h-full ml-0 mt-[15px] text-2xl font-bold p-3 flex flex-col" >Discussions
+            <div>
+                <input   placeholder="  Rechercher"  class="bg-[#FEFEFF] w-[640px] h-[40px] text-sm ml-[13px] mt-[10px] rounded-[20px]"   >
+            </div>
+
+
+            <div id="page1" class=" page hidden ">
+                <div class="item1 bg-white flex justify-between w-full h-20 mt-5 rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400">
+                    <div class="items-center flex justify-between gap-5">
+                      <div class="w-16 h-16 ml-5 flex  flex-row rounded-full"> <img src="p.jpeg" alt=""></div>
+                       <div class="text-sm">
+                            <div class="nom">Oumy</div>
+                            <div class="message">Dor nga breukh bi ioe ?</div>
+
+                        </div>
+
+                        <div class="text-sm mr-10 w-80" >
+                            <input type="checkbox" class="w-full">
+                        </div>
+    
+
+                    </div>
+                  
+                    <div class="text-sm mr-0" >
+                        <div class="text-green-500">00:00</div>
+                        <div class=" text-xs text-green-500 "><i class="fa-solid fa-circle"></i></div>
+                    </div>
+
+                </div>
+
+                <div class="item2 bg-white flex justify-between w-full h-20 mt-5 rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400">
+                    <div class="items-center flex justify-between gap-5">
+                      <div class="w-16 h-16 ml-5 flex flex-row rounded-full">  <img src="profil.jpeg" alt=""> </div>
+                      <div class="text-sm">
+                        <div class="nom ">Khadija</div>
+                        <div class="message">Ay thia madame</div>
+
+                      </div>
+
+                    </div>
+                  
+                    <div class="text-sm mr-0" >
+                        <div class="text-green-500">10:00</div>
+                        <div class=" text-xs text-green-500 "><i class="fa-solid fa-circle"></i></div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div id="page2" class="page hidden">
+                <div class="group1 bg-white flex justify-between w-full h-20 mt-5 rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400">
+                    <div class="items-center flex justify-between gap-5">
+                      <div class="w-16 h-16 ml-5 flex  flex-row rounded-full">  <img src="profil.jpeg" alt=""> </div>
+                      <div class="text-sm">
+                        <div>Fifa</div>
+                        <div>Sama gars yi naka war gayn </div>
+
+                      </div>
+
+                    </div>
+                  
+                    <div class="text-sm mr-0" >
+                        <div class="text-green-500">12:00</div>
+                        <div class=" text-xs text-green-500 "><i class="fa-solid fa-circle"></i></div>
+                    </div>
+
+                </div>
+            
+                <div class="mt-5 space-y-4 p-4">
+                    <label for="group-name" class="text-sm p-2 font-semibold shadow-black bg-white  border-2 rounded-[10px]">Nom du Groupe:</label>
+                    <input type="text" id="group-name" class=" rounded-[20px] text-xl w-full border border-gray-300  p-2" placeholder="Entrez le nom du groupe">
+            
+                    <label for="group-members" class="text-sm p-2 font-semibold mt-4  shadow-black bg-white  border-2 rounded-[10px]">Sélectionnez les membres du groupes:</label>
+                    <select id="group-members" multiple size="5" class="w-full text-xm border border-gray-300 rounded p-2">
+                    </select>
+                    
+            
+                    <button id="ajouter-groupe" class="bg-orange-500 text-sm text-white px-4 py-2 rounded mt-3">Créer le Groupe</button>
+            
+                    <div id="liste-groupes" class=" group2 mt-4 space-y-2">
+                    </div>
+                </div>
+            </div>
+            
+
+            <div id="page3" class="page hidden ">
+                <!-- <div class="flex flex-row bg-[#F9F7F5] border-b-4 border-r-4 border-[#DED9C2] w-full h-20 mt-6 rounded-2xl space-y-4">
+                    <div class="w-16 h-16 ml-5 text-xm ">Anna</div>  
+                </div> -->
+
+                <div class=" bg-[#F9F7F5] border-b-4 border-r-4 border-[#DED9C2] flex justify-between w-full h-20 mt-5 rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400">
+                    <div class="items-center flex justify-between ml-0">
+                      <div class="w-16 h-16"></div>
+                       <div class="text-xm">
+                            <div class="nom">Anna</div>
+
+                        </div>
+
+                    </div>
+                  
+                    <div class="text-sm mr-10" >
+                        <input type="checkbox" class="w-5 h-5">
+
+                    </div>
+
+                </div>
+
+                <div class=" bg-[#F9F7F5] border-b-4 border-r-4 border-[#DED9C2] flex justify-between w-full h-20 mt-5 rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400">
+                    <div class="items-center flex justify-between ml-0">
+                      <div class="w-16 h-16"></div>
+                       <div class="text-xm">
+                            <div>Ismaila</div>
+                        </div>
+                    </div>
+                  
+                    <div class="text-sm mr-10" >
+                        <input type="checkbox" class="w-5 h-5">
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="page4" class=" page hidden ">
+
+                <div tabindex="0" class="item1 bg-white focus:bg-gray-400 flex justify-between w-full h-20 mt-5 rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400">
+                    <div class="items-center flex justify-between gap-5">
+                      <div class="w-16 h-16 ml-5 flex  flex-row rounded-full"> <img src="p.jpeg" alt=""></div>
+                       <div class="text-sm">
+                            <div>Abdou fall</div>
+                            <div>Bonsoir comment vas tu?</div>
+
+                        </div>
+
+                    </div>
+                  
+                    <div class="text-sm mr-0" >
+                        <div class="text-green-500">14:00</div>
+                        <div class=" text-xs text-green-500 "><i class="fa-solid fa-circle"></i></div>
+                    </div>
+
+                </div>
+
+                <div tabindex="0" class="item1 bg-white focus:bg-gray-400 flex justify-between w-full h-20 mt-5 rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400">
+                    <div class="items-center flex justify-between gap-5">
+                      <div class="w-16 h-16 ml-5 flex  flex-row rounded-full"> <img src="p.jpeg" alt=""></div>
+                       <div class="text-sm">
+                            <div>Adama fall</div>
+                            <div>Bonjour bonne nuit</div>
+
+                        </div>
+
+                    </div>
+                  
+                    <div class="text-sm mr-0" >
+                        <div class="text-green-500">00:00</div>
+                        <div class=" text-xs text-green-500 "><i class="fa-solid fa-circle"></i></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="page5" class="page  shadow-black bg-white hidden mt-6 ml-[4rem] border-2  w-5/6  rounded-[10px]"  >
+                <div class=" flex flex-col justify-center items-center mt-10 ">
+                    
+                    <label for="Nom" class=" ">Nom</label>
+                    <input id="nom" type="text" class="w-50 border-2  border-gray-500  rounded-[20px]">
+                    <small class=" text-red-600 text-[10px] hidden">Error message</small>
+                    <br>
+                    <label for="Prenom"  class="">Prénom</label>
+                    <input  id="prenom" type="text" class="w-50 border-2  border-gray-500  rounded-[20px]">
+                    <small class=" text-red-600 text-[10px] hidden">Error message</small>
+                    <br>
+                    <label for="Numero"  class="">Numéro</label>
+                    <input  id="num" type="text" class="w-50 border-2  border-gray-500  rounded-[20px]">
+                    <small class=" text-red-600 text-[10px] hidden">Error message</small>
+    
+                    <br>
+                    <br>
+                    <button type="submit" id="ajout" class=" w-40 bg-orange-500 text-white rounded-[20px]">Ajouter</button>
+                    <br>
+                    <br>
+                    <div id="liste-utilisateurs" class="space-y-3 mt-4"></div>
+                    
+
+                </div>
+               
+
+            </div>
+            
+        </div>
+    
+
+
+        <div  class="pg bg-[#EFE7D7] w-[1200px] h-[800px] ml-0">
+
+            <div class="border-b border-[white] bg-[#EFE7D7] w-[1130px] h-[50px] absolute top-0 flex justify-between">
+
+                <div class="profil flex justify-center items-center text-white bg-gray-600 w-[45px] h-[45px] rounded-[50%] ml-[10px] mt-[4px]">TT</div>
+
+                <div id="icones" class="icones space-x-2  mt-[0px] mr-[20px]">
+
+                    <button  id="pg1" class="pg1 border-2 border-[orange] w-10 h-10  rounded-[50%] mt-[4px]">
+                        <i class="fa-solid fa-delete-left text-2xl cursor-pointer text-orange-500"></i>
+                    </button>
+
+                    <button id="pg2" class="pg2 border-2 border-gray-400 w-10 h-10 rounded-[50%] mt-[4px]">
+                        <i class="fa-solid fa-box-archive text-2xl cursor-pointer text-gray-400"></i>
+                    </button>
+
+                    <button id="pg3" class="pg3 border-2 border-[black] w-10 h-10  rounded-[50%] mt-[4px]">
+                        <i class="fa-solid fa-square text-2xl cursor-pointer text-black" ></i>
+                    </button>
+
+                    <button id="pg4" class="pg4 border-2 border-[red] w-10 h-10  rounded-[50%] mt-[4px]">
+                        <i class="fa-solid fa-trash text-2xl cursor-pointer text-red-700"></i>
+                    </button>
+
+                </div>
+                
+            </div>
+
+            <div id="discussion" class=" hidden ">
+
+                <div class="flex justify-end mt-24">
+                    <div class="text-black w-56 h-20 rounded-s-xl rounded-tr-xl  bg-[#45CA42] flex items-center mr-3">
+                        <div class=" text-xl font-medium ml-2">
+                            Dor nga breukh bi ioe ?
+                        </div>
+                    </div>
+                </div>
+               
+               
+            </div>
+
+            <input placeholder="Ecrivez votre message ici" class=" message bg-[#F2EFF0] w-1/2 h-10 absolute bottom-5 ml-9 rounded-[10px]"></div>
+            <button type="submit" class=" envoyer bg-[#3ECC39] w-10 h-10  absolute bottom-6 right-6 rounded-[50%]"><i class="fa-solid fa-arrow-right text-white"></i></button>
+
+        </div>
+   
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
