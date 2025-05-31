@@ -11,7 +11,8 @@
     
     
 </head>
-<body class="bg-[#F9F7F5] h-full flex">
+<body class=" body bg-[#F9F7F5] h-full flex">
+    
         <div id="sidebar" class="sidebar bg-[#F0EFE8] w-[120px] h-[890px]  flex flex-col items-center justify-center space-y-2" >
             <button  tabindex="0" class="border-2 border-[#D9D5AC] w-[100px] h-[90px] flex flex-col  justify-center items-center rounded-[10px] hover:bg-orange-400 focus:outline-none  focus:outline-2 focus:outline-offset-2 focus:outline-orange-400 active:bg-orange-400  focus:bg-orange-400 ">
                 <i class="fa-solid fa-message"></i>
@@ -46,9 +47,10 @@
 
         </div>
 
-        <div  class=" bg-[#F9F7F5] w-[700px] h-full ml-0 mt-[15px] text-2xl font-bold p-3 flex flex-col" >Discussions
+        <div id="sidebar2"  class=" bg-[#F9F7F5] w-[700px] h-full ml-0 mt-[15px] text-2xl font-bold p-3 flex flex-col" >
+            <h2 class="titrH">CHAT ODC</h2>
             <div>
-                <input   placeholder="  Rechercher"  class="bg-[#FEFEFF] w-[640px] h-[40px] text-sm ml-[13px] mt-[10px] rounded-[20px]"   >
+                <input id="recherche"  placeholder="  Rechercher"  class="bg-[#FEFEFF] w-[640px] h-[40px] text-sm ml-[13px] mt-[10px] rounded-[20px]"   >
             </div>
 
 
@@ -209,19 +211,19 @@
             </div>
 
             <div id="page5" class="page  shadow-black bg-white hidden mt-6 ml-[4rem] border-2  w-5/6  rounded-[10px]"  >
-                <div class=" flex flex-col justify-center items-center mt-10 ">
+                <div class=" flex flex-col justify-center items-center mt-10  ">
                     
                     <label for="Nom" class=" ">Nom</label>
-                    <input id="nom" type="text" class="w-50 border-2  border-gray-500  rounded-[20px]">
-                    <small class=" text-red-600 text-[10px] hidden">Error message</small>
+                    <input id="nom" type="text" class="w-50 h-[50px] border-2  border-gray-500  rounded-[20px]">
+                    <small class=" text-red-600 text-[20px] hidden">Error message</small>
                     <br>
                     <label for="Prenom"  class="">Prénom</label>
-                    <input  id="prenom" type="text" class="w-50 border-2  border-gray-500  rounded-[20px]">
-                    <small class=" text-red-600 text-[10px] hidden">Error message</small>
+                    <input  id="prenom" type="text" class="w-50 h-[50px] border-2  border-gray-500  rounded-[20px]">
+                    <small class=" text-red-600 text-[20px] hidden">Error message</small>
                     <br>
                     <label for="Numero"  class="">Numéro</label>
-                    <input  id="num" type="text" class="w-50 border-2  border-gray-500  rounded-[20px]">
-                    <small class=" text-red-600 text-[10px] hidden">Error message</small>
+                    <input  id="num" type="text" class="w-50 h-[50px] border-2  border-gray-500  rounded-[20px]">
+                    <small class=" text-red-600 text-[20px] hidden">Error message</small>
     
                     <br>
                     <br>
@@ -243,8 +245,15 @@
         <div  class="pg bg-[#EFE7D7] w-[1200px] h-[800px] ml-0">
 
             <div class="border-b border-[white] bg-[#EFE7D7] w-[1130px] h-[50px] absolute top-0 flex justify-between">
-
-                <div class="profil flex justify-center items-center text-white bg-gray-600 w-[45px] h-[45px] rounded-[50%] ml-[10px] mt-[4px]">TT</div>
+                <div class="flex items-center gap-3">
+                    <div class="profil bg-gray-600 text-white w-[45px] h-[45px] rounded-full flex items-center justify-center"></div>
+                    <div class="details">
+                      <div class="nom-profil font-bold text-sm"></div>
+                      <div class="numero-profil text-xs text-gray-600"></div>
+                    </div>
+                  </div>
+                  
+                <!-- <div id="profil" class="profil flex justify-center items-center text-white bg-gray-600 w-[45px] h-[45px] rounded-[50%] ml-[10px] mt-[4px]">TT</div> -->
 
                 <div id="icones" class="icones space-x-2  mt-[0px] mr-[20px]">
 
@@ -268,21 +277,48 @@
                 
             </div>
 
-            <div id="discussion" class=" hidden ">
-
-                <div class="flex justify-end mt-24">
-                    <div class="text-black w-56 h-20 rounded-s-xl rounded-tr-xl  bg-[#45CA42] flex items-center mr-3">
+            <div id="discussion" class="overflow-y-auto max-h-[800px] px-4 ">
+                <div class="h-full flex w-full justify-center  ">
+                    <img src="mess.png" class="w-[40rem] m-auto pt-[4rem] " alt="">
+                </div>
+                <div id="expediteur" class="flex justify-end mt-24">
+                    <!-- <div class="text-black justify-between w-80 gap-10  h-20 rounded-s-xl rounded-tr-xl  bg-[#45CA42] flex items-center mr-3">
                         <div class=" text-xl font-medium ml-2">
                             Dor nga breukh bi ioe ?
                         </div>
+
+                        <div class=" inline-flex gap-4 ">
+                            <div class="text-black">14:00</div>
+                            <i class="fa-solid fa-check-double"></i>
+                        </div>
+                    </div> -->
+
+                 
+                </div>
+
+                <div id="destinataire" class="flex justify-start">
+                    <!-- <div class="text-black justify-between w-80 gap-10 h-20 rounded-e-xl rounded-tl-xl bg-[#cccccc] flex items-center ml-3">
+                        <div class=" text-xl font-medium ml-2">
+                            Waw dor nako yaw nak gayn?
+                        </div>
+
+                        <div class="inline-flex gap-4">
+                            <div class="text-black">14:02</div>
+                            <i class="fa-solid fa-check-double"></i>
+                        </div>
                     </div>
+
+
+                    <div>
+                       
+                    </div> -->
                 </div>
                
                
             </div>
 
-            <input placeholder="Ecrivez votre message ici" class=" message bg-[#F2EFF0] w-1/2 h-10 absolute bottom-5 ml-9 rounded-[10px]"></div>
-            <button type="submit" class=" envoyer bg-[#3ECC39] w-10 h-10  absolute bottom-6 right-6 rounded-[50%]"><i class="fa-solid fa-arrow-right text-white"></i></button>
+            <input id="ecrireMess" placeholder="Ecrivez votre message ici" class="message bg-[#F2EFF0] w-1/2 h-10 absolute bottom-5 ml-9 rounded-[10px]"></div>
+            <button id="envm" type="submit" class=" envoyer bg-[#3ECC39] w-10 h-10  absolute bottom-6 right-6 rounded-[50%]"><i class="fa-solid fa-arrow-right text-white"></i></button>
 
         </div>
    

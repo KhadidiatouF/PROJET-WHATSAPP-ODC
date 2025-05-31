@@ -6,7 +6,9 @@ export const utilisateurs = [
         numero:'778899000',
         etat:'Disponible',
         Online:true,
-        archive: true
+        archive: true,
+        login:"dija1",
+        mdp:"password"
 
 
     },
@@ -17,7 +19,9 @@ export const utilisateurs = [
         numero:'75889900',
         etat:'Disponible',
         Online:false,
-        archive: false
+        archive: false,
+        login:"bamba1",
+        mdp:"password"
         
     },
     {
@@ -27,7 +31,9 @@ export const utilisateurs = [
         numero:'76889900',
         etat:'Disponible',
         Online:true,
-        archive: false
+        archive: false,
+        login:"oumy1",
+        mdp:"password"
 
 
         
@@ -39,7 +45,9 @@ export const utilisateurs = [
         numero:'78889900',
         etat:'Disponible',
         Online:false,
-        archive: false 
+        archive: false ,
+        login:"nanou1",
+        mdp:"password"
     }
 ]
 
@@ -50,29 +58,33 @@ export const groupes = [
             {
                 nom:'Khadija',
                 prenom:'Fall',
-                profil:'Admin',
+                statut:'Admin',
                 numero:'778899000',
                 etat:'Disponible',
-                Online:true,
+                messages: [
+                    { expediteur: "Khadija", contenu: "Salut la famille", heure: "10:00" },
+                  ]
         
         
             },
             { 
                 nom:'Seynabou',
                 prenom:'Diagne',
-                profil:'membre',
+                statut:'membre',
                 numero:'78889900',
                 etat:'Disponible',
-                Online:false
-            },
+                messages: [
+                    { expediteur: "Seynabou", contenu: "Salut noleine def", heure: "10:00" },
+                  ]            },
             {
                 nom:'Oumy',
                 prenom:'Ndiaye',
-                profil:'membre',
+                statut:'membre',
                 numero:'76889900',
                 etat:'Disponible',
-                Online:true
-        
+                messages: [
+                    { expediteur: "Oumy" , contenu: "Coucou wa mafia bi", heure: "10:00" },
+                  ]        
                 
             },
 
@@ -81,21 +93,32 @@ export const groupes = [
 ]; 
 export const conversations = [
     {
-
-        nom:'Khadija',
-        prenom:'Fall',
-        profil:'fille.jpg',
-        numero:'77889900',
-        etat:'Disponible',
-        Online:true,
+        id: '1',
+        nom: 'Khadija',
+        prenom: 'Fall',
+        profil: 'fille.jpg',
+        numero: '77889900',
+        etat: 'Disponible',
+        Online: true,
         archive: false,
-        id:'1',
-        message:'Bonsoir madame',
-        expediteur:''
-
-    },
+        messages: [
+          {
+            expediteur: 'moi',
+            contenu: 'Wa baxna',
+            heure: '14:00',
+            lu: true
+          },
+          {
+            destinaire: 'oumy',
+            contenu: 'Bonsoir Tonss',
+            heure: '14:00',
+            lu: true
+          }
+        ]
+      },
     {
 
+        id:'2',
         nom:'Oumy',
         prenom:'Ndiaye',
         profil:'fille.jpg',
@@ -103,9 +126,15 @@ export const conversations = [
         etat:'Disponible',
         Online:true,
         archive: false,
-        id:'1',
-        message:'No def ioe',
-        expediteur:''
+        messages: [
+            {
+              destinaire: 'moi',
+              contenu: 'No def ioe',
+              heure: '14:00',
+              lu: true
+            }
+          ],
+         destinaire:''
 
     },
     {
@@ -113,13 +142,18 @@ export const conversations = [
         nom:'Anna',
         prenom:'Sock',
         profil:'fille.jpg',
-        numero:'77889900',
+        numero:'778899007',
         etat:'Disponible',
         Online:true,
         archive: false,
-        id:'1',
-        message:'Ay thia madame',
-        expediteur:''
+        messages: [
+            {
+              destinataire: 'moi',
+              contenu: 'Aythia madame',
+              heure: '14:00',
+              lu: true
+            }
+          ],
 
     },
     {
@@ -127,13 +161,32 @@ export const conversations = [
         nom:'Birane',
         prenom:'Wane',
         profil:'fille.jpg',
-        numero:'77889900',
+        numero:'778899009',
         etat:'Disponible',
         Online:true,
         archive: false,
-        id:'1',
-        message:'Beugouma lii',
+        messages: [
+            {
+              expediteur: 'moi',
+              contenu: 'beugouma li',
+              heure: '14:00',
+              lu: true
+            }
+          ],
         expediteur:''
 
     },
 ]
+
+export const messages = [
+  {
+    id: 1,
+    content: "Bonsoir madame",
+    de: "Khadija",
+    à: "moi",
+    heure: "2025-05-29T21:30:00Z",
+    type: "contact", // ou "groupe", ou "diffusion"
+    lu: false 
+    
+  },
+];

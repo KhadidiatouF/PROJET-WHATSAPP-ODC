@@ -1,4 +1,6 @@
 import { conversations, utilisateurs } from "./tab.js";
+let contactActif ;
+
 
 export function route(page) {
     const pages = document.querySelectorAll('.page')
@@ -56,6 +58,7 @@ export function ajout(tab, utilisateur) {
 }
 
 export function afficherMessages(conversations) {
+
     const m = document.getElementById("page1");
     m.innerHTML = ""; 
 
@@ -72,7 +75,7 @@ export function afficherMessages(conversations) {
                       <div class="w-16 h-16  items-center justify-center flex text-white bg-slate-800 flex-row rounded-full"> ${initial}</div>
                        <div class="text-sm">
                             <div class="nom " >${c.nom} ${c.prenom}  </div>
-                            <div class="message">${c.message} </div>
+                            <div class="message">${c.messages[0].contenu} </div>
 
                         </div>
 
@@ -85,12 +88,33 @@ export function afficherMessages(conversations) {
             </div>
         `;
 
-        const divClickable = item.querySelector('.item1');
-        divClickable.addEventListener('click', ()=>[
-            divClickable.classList.toggle('selected'),
-            divClickable.classList.toggle('bg-gray-500')
+        
 
-        ])
+        const divClickable = item.querySelector('.item1');
+        divClickable.addEventListener('click', () => {
+            document.querySelectorAll('.item1').forEach(el => {
+                el.classList.remove('selected', 'bg-gray-500');
+            });
+        
+            divClickable.classList.add('selected', 'bg-gray-500');
+        
+            const user = utilisateurs.find(u => 
+                u.nom.toLowerCase() === c.nom.toLowerCase() &&
+                u.prenom.toLowerCase() === c.prenom.toLowerCase()
+            );
+        
+            const nomComplet = user ? `${user.nom} ${user.prenom}` : `${c.nom} ${c.prenom}`;
+            const numero = user ? user.numero : c.numero;
+        
+            profil(initial, nomComplet, numero);
+
+            contactActif = c;
+            afficherConversation(c);  // <-- Affiche la discussion complète dans la zone discussion
+        });
+        
+
+        
+
 
 
         m.appendChild(item);
@@ -140,6 +164,8 @@ export function genererNomEtPrenomUnique(nom, prenom, utilisateurs) {
 
 export function afficherUtilisateurs(utilisateurs) {
     const listeU = document.getElementById("liste-utilisateurs");
+  
+
     // listeU.innerHTML = ""; 
 
     utilisateurs.forEach(user => {
@@ -164,6 +190,45 @@ export function afficherUtilisateurs(utilisateurs) {
 }
 
 
+export function afficherFiltre(conversations ) {
+    const contacts = document.getElementById("page1");
+    // console.log(contacts)
+    contacts.innerHTML = ""; 
+
+
+
+    conversations.forEach(conv => {
+    let initial = conv.prenom.charAt(0).toUpperCase() +  conv.nom.charAt(0).toUpperCase();
+
+        // if (user.archive === false) {
+            const c = document.createElement("div");
+        // c.className = "flex items-center justify-between bg-white p-3 rounded-xl shadow";
+
+        c.innerHTML = `
+              <div class="item1 bg-white  flex justify-between w-full h-20 mt-5 rounded-2xl space-y-4 cursor-pointer hover:bg-gray-100">
+                    <div class="items-center flex justify-between gap-5">
+                      <div class="w-16 h-16  items-center justify-center flex text-white bg-slate-800 flex-row rounded-full"> ${initial}</div>
+                       <div class="text-sm">
+                            <div class="nom " >${conv.nom} ${conv.prenom}  </div>
+                            <div class="message">${conv.messages[0].contenu} </div>
+
+                        </div>
+
+                
+                    </div>
+                <div class="text-sm mr-0">
+                    <div class="text-green-500">00:00</div>
+                    <div class="text-xs text-green-500"><i class="fa-solid fa-circle"></i></div>
+                </div>
+            </div>
+        `;
+
+        contacts.appendChild(c);
+        }
+    // }
+    );
+}
+
 
 export function afficherContact(utilisateurs ) {
     const contacts = document.getElementById("page3");
@@ -181,7 +246,7 @@ export function afficherContact(utilisateurs ) {
                     <div class="items-center flex justify-between ml-0">
                       <div class="w-16 h-16"></div>
                        <div class="text-xm">
-                            <div class = "nom">${user.nom} ${user.prenom}</div>
+                            <div class = "nom">${user.nom} ${user.prenom} - ${user.numero}</div>
 
                         </div>
 
@@ -242,6 +307,9 @@ export function afficherGroupes(listeGroupes) {
                       <div class="w-16 h-16 ml-5 flex  flex-row rounded-full">  <img src="profil.jpeg" alt=""> </div>
                       <div class="text-sm">
                         <div  class="font-bold"> ${groupe.nom} </div>
+                        <div  class="font-bold"> ${groupe.membres[0].nom}   ${groupe.membres[0].prenom},  ${groupe.membres[1].nom} ${groupe.membres[1].prenom} </div>
+
+
                       </div>
 
                     </div>
@@ -252,10 +320,29 @@ export function afficherGroupes(listeGroupes) {
                     </div>
 
                 </div>`
+                div.addEventListener("click", () => {
+                    groupeActif = groupe;
+                    afficherMessagesGroupe(groupe);  // On affiche la discussion
+                });
         groupCible.appendChild(div);
     });
     // ajoutGroupe(listeGroupes)
 }
+
+export function afficherMessagesGroupe(groupe) {
+    const container = document.getElementById("discussion");
+    container.innerHTML = "";
+
+    groupe.messages.forEach(msg => {
+        const estMoi = msg.expediteur === monNumero; // monNumero = numéro utilisateur courant
+        const div = envoieMessage(
+            { content: msg.contenu, heure: msg.heure }, 
+            estMoi
+        );
+        container.appendChild(div);
+    });
+}
+
 
 
 export function ajouterMembreDansGroupe(groupes, groupeNom, utilisateur) {
@@ -303,40 +390,32 @@ export function archiverContact(utilisateurs){
     
     
 }
+export function profil(initiales, nomComplet, numero) {
+    const profilDiv = document.querySelector('.profil');
+    const nomDiv = document.querySelector('.nom-profil');
+    const numeroDiv = document.querySelector('.numero-profil');
+
+    if (profilDiv) profilDiv.textContent = initiales;
+    if (nomDiv) nomDiv.textContent = nomComplet;
+    if (numeroDiv) numeroDiv.textContent = numero;
+}
 
 
-export function profil(utilisateurs) {
-    const p = document.getElementById(".profil");
-    p.innerHTML = ""; 
-
-    utilisateurs.forEach(c => {
-        let initial = c.prenom.charAt(0).toUpperCase() +  c.nom.charAt(0).toUpperCase();
-
-            const profil = document.createElement("div");
-
-        item.innerHTML = `
-            <div class="profil bg-gray-600 w-[45px] h-[45px] rounded-[50%] ml-[10px] mt-[4px]">${initial}</div>
-
-        `;
-        const clic = item.querySelector('.profil');
-        clic.addEventListener('click', ()=>[
-            clic.classList.toggle('selected'),
-            clic.classList.toggle('bg-gray-500')
-
-        ])
-
-       
 
 
-        p.appendChild(profil);
-        
-    });
+export function titreDynamique(titre) {
+    const h2 = document.querySelector('.titrH')
+    if (h2) {
+        h2.textContent = titre.toUpperCase();
+    }
     
 }
 
 
+
 export function afficherContactArchiver(conversations){
     const m = document.getElementById("page4");
+    
     m.innerHTML = ""; 
 
     conversations.forEach(c => {
@@ -352,7 +431,7 @@ export function afficherContactArchiver(conversations){
                       <div class="w-16 h-16  items-center justify-center flex text-white bg-slate-800 flex-row rounded-full"> ${initial}</div>
                        <div class="text-sm">
                             <div class="nom " >${c.nom} ${c.prenom}  </div>
-                            <div class="message">${c.message} </div>
+                            <div class="message">${c.messages[0].contenu} </div>
 
                         </div>
 
@@ -395,4 +474,162 @@ export function pasDoublon(utilisateurs, numero) {
     return false;
     
 }
+export function envoieMessage(message, deMoi = true) {
+    const divParent = document.createElement("div");
+    divParent.className = `flex ${deMoi ? 'justify-end' : 'justify-start'} mt-10`;
+    divParent.id = deMoi ? 'expediteur' : 'destinataire';
+  
+    const heure = message.heure || getCurrentTime();
+    const texte = message.content || '';
+    
+  
+    divParent.innerHTML = `
+      <div class="text-black justify-between w-80 gap-10 h-20 
+        ${deMoi ? 'bg-[#45CA42] rounded-s-xl rounded-tr-xl mr-3' : 'bg-[#E5E5EA] rounded-e-xl rounded-tl-xl ml-3'}
+        flex items-center"
+      >
+        <div class="text-xl font-medium ml-2 break-words overflow-hidden w-full">      
+            ${texte}
+        </div>
+        <div class="inline-flex gap-4">
+          <div class="text-black">${heure}</div>
+          <i class="fa-solid fa-check"></i>
+        </div>
+      </div>
+    `;
+  
+    return divParent;
+  }
 
+export function afficherDiscussion(conversations) {
+    const discussion = document.getElementById('discussion');
+    discussion.innerHTML = ''; // Vider la discussion
+  
+    conversations.messages.forEach(message => {
+      const divMessage = envoieMessage({
+        content: message.contenu,
+        heure: message.heure,
+        lu: message.lu
+      }, message.expediteur === 'moi');
+  
+      discussion.appendChild(divMessage);
+    });
+}
+  
+
+export function getCurrentTime() {
+    const date = new Date();
+    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  }
+  
+
+export function rechercherContacts(utilisateurs, valeur) {
+    const val = valeur.trim().toLowerCase();
+  
+    if (val === '*') {
+      return [...utilisateurs].sort((a, b) => a.nom.localeCompare(b.nom));
+    }
+  
+    if (val === '') {
+      return [];
+    }
+  
+    return utilisateurs.filter(user =>
+      user.nom.toLowerCase().includes(val) ||
+      user.numero.includes(val)
+    );
+}
+
+  export function enregistrerMessage(msg) {
+    messages.push(msg);
+  }
+
+//   export function afficherConversation(numero) {
+//     const zoneDiscussion = document.getElementById("discussion");
+//     zoneDiscussion.innerHTML = "";
+
+//     const conv = conversations.find(c => c.numero === numero);
+//     if (!conv) {
+//         zoneDiscussion.innerHTML = "<p>Aucune conversation trouvée</p>";
+//         return;
+//     }
+
+//     const titre = document.createElement("h3");
+//     titre.textContent = `${conv.nom} ${conv.prenom}`;
+//     zoneDiscussion.appendChild(titre);
+
+//     conv.messages.forEach(msg => {
+//         const messageEl = document.createElement("div");
+//         messageEl.className = msg.expediteur === "moi" ? "text-right" : "text-left";
+//         messageEl.innerHTML = `
+//             <p><strong>${msg.expediteur || msg.destinataire}</strong> : ${msg.contenu}</p>
+//             <small>${msg.heure}</small>
+//         `;
+//         zoneDiscussion.appendChild(messageEl);
+//     });
+// }
+
+export function afficherConversation(conversation) {
+    const container = document.getElementById("discussion");
+    container.innerHTML = "";
+
+    if (!conversation || !conversation.messages || conversation.messages.length === 0) {
+        container.innerHTML = "<p>Aucune conversation</p>";
+        return;
+    }
+
+    conversation.messages.forEach(msg => {
+        // On détermine si le message est envoyé par "moi"
+        // Exemple : msg.envoyeParMoi ou tu peux faire une comparaison sur msg.expediteur
+        const deMoi = msg.envoyeParMoi === true;
+
+        // On prépare un objet compatible avec envoieMessage
+        const messagePourAffichage = {
+            content: msg.contenu || msg.content || '',
+            heure: msg.heure || '',
+        };
+
+        const messageDiv = envoieMessage(messagePourAffichage, deMoi);
+        container.appendChild(messageDiv);
+    });
+
+    // Optionnel : scroll automatique vers le bas de la discussion
+    container.scrollTop = container.scrollHeight;
+}
+
+export function genererMessageAutomatik(nom) {
+    const reponses = [
+      
+      "Beugouma louy dokh kassé !.",
+      "lI ma beug moy mouy dokh si samay contrainte",
+      "Dou manguiii wax rek ? wa baxna ba lundi",
+      "ayyy thiouné ngéné !",
+      "Gni parégoul sama liguey 6em",
+      "loléne ma yorel ?"
+    ];
+  
+    const index = Math.floor(Math.random() * reponses.length);
+    return reponses[index];
+}
+
+
+  
+// export function afficherConversation(conversation) {
+//     const container = document.getElementById("discussion");
+//     container.innerHTML = "";
+
+//     if (!conversation || !conversation.messages) {
+//         container.innerHTML = "<p>Aucune conversation</p>";
+//         return;
+//     }
+
+//     conversation.messages.forEach(msg => {
+//         const msgDiv = document.createElement("div");
+//         msgDiv.className = "p-2 my-1 rounded bg-gray-200";
+//         msgDiv.innerHTML = `
+//             <strong>${msg.expediteur || msg.destinataire || 'Inconnu'}</strong> : ${msg.contenu}
+//             <span class="text-xs text-gray-500 ml-2">${msg.heure}</span>
+//         `;
+//         container.appendChild(msgDiv);
+//     });
+// }
