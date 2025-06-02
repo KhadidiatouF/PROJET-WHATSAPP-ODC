@@ -1,17 +1,28 @@
-import {route,route2,getCurrentTime, afficherMessagesGroupe,creerUser, ajout, afficherUtilisateurs, creerGroupe,ajoutGroupe,afficherGroupes, afficherContact , archiverContact, afficherContactArchiver, afficherMessages, validerNumero, pasDoublon, genererNomEtPrenomUnique, titreDynamique, profil, envoieMessage,enregistrerMessage, rechercherContacts, afficherFiltre, afficherConversation} from "./components.js";
+import {route,route2,getCurrentTime, afficherMessagesGroupe,creerUser, ajout, afficherUtilisateurs, creerGroupe,ajoutGroupe,afficherGroupes, afficherContact , archiverContact, afficherContactArchiver, afficherMessages, validerNumero, pasDoublon, genererNomEtPrenomUnique, titreDynamique, profil, envoieMessage,enregistrerMessage, rechercherContacts, afficherFiltre, afficherConversation, supprimerDiscussion} from "./components.js";
 import {utilisateurs, groupes, conversations} from "./tab.js";
 import { loginPage} from "./loginPage.js";
+// document.body.appendChild(loginPage());
 
 
-const connexion =  loginPage();
+let contactActif = null;
+let groupeActif = null;
+let userLogin = loginPage()
 
-// const body = document.querySelector('.body')
-// body.innerHTML=""
-// body.appendChild(connexion);
+if (userLogin === null) {
+    // return  
+}else{
+   accueil()   
+}
 
 
+// loginPage(accueil);
+// console.log(document.querySelector('#envm'))
+
+function accueil() {
 const boutons = document.querySelectorAll('#sidebar button')
 const ajoute = document.querySelector('#ajout')
+const ajoutee = document.querySelector('#ajoutt')
+
 const ajoutGroupeBtn = document.querySelector('#ajouter-groupe');
 const nomGroupeInput = document.querySelector('#group-name');
 const membresSelect = document.querySelector('#group-members');
@@ -19,6 +30,7 @@ const btnIcon =  document.querySelectorAll('#icones button')
 
 
 const zone = document.querySelector('#discussion'); 
+
 
 document.querySelector('#envm').addEventListener('click', () => {
     const input = document.querySelector('#ecrireMess');
@@ -43,6 +55,55 @@ document.querySelector('#envm').addEventListener('click', () => {
       }, 1500);
     }
   });
+
+
+
+// document.querySelector('#envm').addEventListener('click', () => {
+//   const input = document.querySelector('#ecrireMess');
+//   const text = input.value.trim();
+//   const currentPage = document.querySelector('.page.active'); // Ajoute une classe 'active' à la page affichée
+//   const zone = document.querySelector('#discussion');
+
+//   if (text === '') return;
+
+//   if (currentPage && currentPage.id === 'page3') {
+//     // MODE DIFFUSION
+//     const checkboxes = document.querySelectorAll('.diffusion-check:checked');
+//     checkboxes.forEach(checkbox => {
+//       const numero = checkbox.dataset.numero;
+//       const msg = {
+//         content: text,
+//         heure: getCurrentTime(),
+//         envoyeParMoi: true,
+//         destinataire: numero
+//       };
+//       const element = envoieMessage(msg, true);
+//       zone.appendChild(element);
+//     });
+
+//     input.value = '';
+//     zone.scrollTop = zone.scrollHeight;
+
+//   } else {
+//     // AUTRE MODE (normal ou groupe)
+//     const msg = { content: text, heure: getCurrentTime(), envoyeParMoi: true };
+//     const element = envoieMessage(msg, true);
+//     zone.appendChild(element);
+//     input.value = '';
+
+//     setTimeout(() => {
+//       const reponse = {
+//         content: "En tout cas Kadiatou beugouma liiii",  
+//         heure: getCurrentTime(),
+//         envoyeParMoi: false
+//       };
+//       const reponseElement = envoieMessage(reponse, false);
+//       zone.appendChild(reponseElement);
+//       zone.scrollTop = zone.scrollHeight;
+//     }, 1500);
+//   }
+// });
+
   
 
 const inputSearch = document.querySelector('#recherche');
@@ -59,7 +120,9 @@ inputSearch.addEventListener('keydown', (e) => {
   
 
 btnIcon[0].addEventListener('click', ()=> {
-    route2(('#pg1'));
+    // route2(('#pg1'));
+    const numero = document.querySelectorAll('[numeroUser]')
+    supprimerDiscussion(numero)
 })
 
 
@@ -77,24 +140,8 @@ btnIcon[2].addEventListener('click', ()=> {
     
 })
 btnIcon[3].addEventListener('click', ()=> {
-    route2(('#pg4'));
+    // route2(('#pg4'));
 })
-
-const envoyerBtn = document.querySelector('#envm')
-envoyerBtn.addEventListener("click", () => {
-    const texte = inputMessage.value;
-    if (!texte || !groupeActif) return;
-
-    const nouveauMessage = {
-        expediteur: monNumero,
-        contenu: texte,
-        heure: getCurrentTime()
-    };
-
-    groupeActif.messages.push(nouveauMessage);
-    afficherMessagesGroupe(groupeActif);  // Mise à jour affichage
-    inputMessage.value = "";
-});
 
 
 
@@ -119,10 +166,9 @@ boutons[1].addEventListener('click', ()=> {
     route(('#page2'));
     remplirListeUtilisateurs();  
     afficherUtilisateurs(utilisateurs);
-    // afficherGroupes(listeGroupes)
     titreDynamique("Groupe");
-
-    // afficherGroupes(groupes);
+    afficherMessagesGroupe(groupes);
+    // afficherGroupes(groupes); //quand je decommente les groupes dans tab.js apparaissent mais le formulaire d'ajout saute
 })
 
 boutons[2].addEventListener('click', ()=> {
@@ -146,12 +192,19 @@ boutons[3].addEventListener('click', ()=> {
 
 boutons[4].addEventListener('click', ()=> {
     route(('#page5'));
+    // afficherUtilisateurs(utilisateurs); 
     titreDynamique("Nouveau");
+
+
+})
+
+boutons[5].addEventListener('click', ()=> {
+    loginPage();
 
 })
 
 
-ajoute.addEventListener('click', ajoutUtilisateur)
+ajoutee.addEventListener('click', ajoutUtilisateur)
 
 function ajoutUtilisateur() {
     let valide = true;
@@ -172,7 +225,7 @@ function ajoutUtilisateur() {
     }
     if (recup2 === '') {
         valide = false
-
+ 
         errorm[1].textContent='Le champs prenom ne peut pas etre vide'
         errorm[1].classList.remove('hidden')
     }
@@ -194,8 +247,9 @@ function ajoutUtilisateur() {
 
         errorm[2].textContent='Ce numéro existe déja !'
         errorm[2].classList.remove('hidden')
+        
     }
-
+    
     
     if(valide){
 
@@ -238,6 +292,7 @@ ajoutGroupeBtn.addEventListener('click', () => {
     const groupe = creerGroupe(nomGroupe);
     groupe.membres = membres;
 
+    
     ajoutGroupe(groupes, groupe);
     afficherGroupes(groupes);
 
@@ -247,3 +302,6 @@ ajoutGroupeBtn.addEventListener('click', () => {
       alert('Groupe créé avec succès.');
     }
   });
+
+}
+

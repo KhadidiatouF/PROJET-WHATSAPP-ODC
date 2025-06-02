@@ -1,5 +1,7 @@
-import { conversations, utilisateurs } from "./tab.js";
+import { conversations, messages, utilisateurs } from "./tab.js";
 let contactActif ;
+let groupeActif = null;
+
 
 
 export function route(page) {
@@ -43,11 +45,13 @@ export function creerUser(nom, prenom, numero) {
     return {
         nom:nom,
         prenom:prenom,
-        profil:'fille.jpg',
+       
         numero:numero,
         etat:'Disponible',
         Online:true,
-        archive: false
+        archive: false,
+        login: "contact", 
+        mdp: "1234"
 
     }
     
@@ -62,7 +66,13 @@ export function afficherMessages(conversations) {
     const m = document.getElementById("page1");
     m.innerHTML = ""; 
 
+    if (conversations === null) {
+        return
+    }
     conversations.forEach(c => {
+        // console.log(c.numero);
+        
+        
         let initial = c.prenom.charAt(0).toUpperCase() +  c.nom.charAt(0).toUpperCase();
 
         if (c.archive == false) {
@@ -75,7 +85,9 @@ export function afficherMessages(conversations) {
                       <div class="w-16 h-16  items-center justify-center flex text-white bg-slate-800 flex-row rounded-full"> ${initial}</div>
                        <div class="text-sm">
                             <div class="nom " >${c.nom} ${c.prenom}  </div>
-                            <div class="message">${c.messages[0].contenu} </div>
+                            <div class="message">
+          ${Array.isArray(c.messages) && c.messages.length > 0 ? c.messages[0].contenu : 'Aucun message'}
+ </div>
 
                         </div>
 
@@ -91,12 +103,16 @@ export function afficherMessages(conversations) {
         
 
         const divClickable = item.querySelector('.item1');
+
+        // console.log(divClickable)
         divClickable.addEventListener('click', () => {
             document.querySelectorAll('.item1').forEach(el => {
                 el.classList.remove('selected', 'bg-gray-500');
             });
         
             divClickable.classList.add('selected', 'bg-gray-500');
+            divClickable.setAttribute('id', 'selected');
+
         
             const user = utilisateurs.find(u => 
                 u.nom.toLowerCase() === c.nom.toLowerCase() &&
@@ -111,11 +127,7 @@ export function afficherMessages(conversations) {
             contactActif = c;
             afficherConversation(c);  // <-- Affiche la discussion complète dans la zone discussion
         });
-        
-
-        
-
-
+        divClickable.setAttribute('numeroUser',c.numero)
 
         m.appendChild(item);
         }
@@ -253,7 +265,9 @@ export function afficherContact(utilisateurs ) {
                     </div>
                   
                     <div class="text-sm mr-10" >
-                        <input type="checkbox" class="w-5 h-5">
+                     
+                        <input type="checkbox" class="w-5 h-5 diffusion-check" data-numero="${user.numero}">
+
 
                     </div>
 
@@ -273,13 +287,11 @@ export function creerGroupe(nomG, nom, prenom,numero) {
             {
                 nom:nom,
                 prenom:prenom,
-                profil:'Admin',
+                role:'Admin',
                 numero:numero,
                 etat:'Disponible',
                 Online:true,
-                archive: true
-        
-        
+                archive: true        
             },
         ] 
     };
@@ -293,23 +305,27 @@ export function ajoutGroupe(listeGroupes, groupe) {
 
 
 export function afficherGroupes(listeGroupes) {
-    const groupCible = document.querySelector('#page2');
+    const groupCible = document.querySelector('.group1');
     groupCible.innerHTML = ''; 
 
+
     listeGroupes.forEach((groupe) => {
+
+    // let initials = groupe.nomG.charAt(0).toUpperCase() 
+
+        // console.log(groupe.nomG);
+        
         const div = document.createElement('div');
         // <div  class="font-bold"> ${groupe.membres[0].nom}  ${groupe.membres[1].nom} </div>
 
         // div.innerHTML = `<h4>Groupe ${index + 1} : ${groupe.nom}</h4><ul>${groupe.membres.map(m => `<li>${m.nom} ${m.prenom}</li>`).join('')}</ul>`;
         div.innerHTML= `
                 <div class="group1 bg-white flex justify-between w-full h-20 mt-5  rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400">
-                    <div class="items-center flex justify-between gap-5">
-                      <div class="w-16 h-16 ml-5 flex  flex-row rounded-full">  <img src="profil.jpeg" alt=""> </div>
-                      <div class="text-sm">
+                    <div class="items-center flex justify-between gap-5 ">
+                      <div class="w-16 h-16 ml-5 flex  bg-gray-600 text-white flex-row  items-center justify-center rounded-full">   </div>
+                      <div class="text-sm ">
                         <div  class="font-bold"> ${groupe.nom} </div>
                         <div  class="font-bold"> ${groupe.membres[0].nom}   ${groupe.membres[0].prenom},  ${groupe.membres[1].nom} ${groupe.membres[1].prenom} </div>
-
-
                       </div>
 
                     </div>
@@ -319,10 +335,14 @@ export function afficherGroupes(listeGroupes) {
                         <div class=" text-xs text-green-500 "><i class="fa-solid fa-circle"></i></div>
                     </div>
 
-                </div>`
+                    
+
+                </div>
+                             
+                `
                 div.addEventListener("click", () => {
                     groupeActif = groupe;
-                    afficherMessagesGroupe(groupe);  // On affiche la discussion
+                    afficherMessagesGroupe(groupe);  
                 });
         groupCible.appendChild(div);
     });
@@ -332,16 +352,89 @@ export function afficherGroupes(listeGroupes) {
 export function afficherMessagesGroupe(groupe) {
     const container = document.getElementById("discussion");
     container.innerHTML = "";
+    
 
-    groupe.messages.forEach(msg => {
-        const estMoi = msg.expediteur === monNumero; // monNumero = numéro utilisateur courant
-        const div = envoieMessage(
-            { content: msg.contenu, heure: msg.heure }, 
-            estMoi
-        );
+    if (!groupe || !Array.isArray(groupe.membres)) {
+        container.textContent = "Aucun membre dans ce groupe.";
+        return;
+    }
+
+    let messages = [];
+
+    groupe.membres.forEach(membre => {
+        const nomExpediteur = `${membre.nom} ${membre.prenom}`;
+        const messagesMembre = membre.messages || [];
+
+        messagesMembre.forEach(msg => {
+            messages.push({
+                expediteur: nomExpediteur,
+                contenu: msg.contenu,
+                heure: msg.heure
+            });
+        });
+    });
+
+    messages.sort((a, b) => a.heure.localeCompare(b.heure));
+
+    messages.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = "message w-80 h-20 ml-5  bg-gray-200 p-2 mt-20 rounded";
+
+        div.innerHTML = `
+            <div class="font-semibold text-sm">${msg.expediteur}</div>
+            <div class="text-base">${msg.contenu}</div>
+            <div class="text-xs text-right text-gray-600">${msg.heure}</div>
+        `;
+
         container.appendChild(div);
     });
 }
+
+// export function afficherMessagesGroupe(groupe) {
+//     const container = document.getElementById("discussion");
+//     container.innerHTML = "";
+
+//     // Fusionner tous les messages de tous les membres
+    
+//     const tousLesMessages = groupe.membres.flatMap(m => 
+
+        
+//         (m.messages || []).map(msg => ({
+//             expediteur: msg.expediteur || `${m.nom} ${m.prenom}`,
+//             contenu: msg.contenu,
+//             heure: msg.heure
+//         }))
+//     );
+
+//     // Trier les messages par heure si besoin (simple tri alphabétique ici)
+//     tousLesMessages.sort((a, b) => a.heure.localeCompare(b.heure));
+
+//     // Affichage
+//     tousLesMessages.forEach(msg => {
+//         const estMoi = msg.expediteur === "Moi"; // à adapter si tu veux comparer par numéro
+//         const div = envoieMessage(
+//             { content: msg.contenu, heure: msg.heure }, 
+//             estMoi
+//         );
+//         container.appendChild(div);
+//     });
+// }
+
+export function envoyerMessageGroupe(messageTexte, groupe) {
+    const heure = getCurrentTime(); // une fonction pour l'heure au format hh:mm
+
+    groupe.membres.forEach(membre => {
+        if (!membre.messages) membre.messages = [];
+        membre.messages.push({
+            expediteur: "Moi",  // ou le nom réel si besoin
+            contenu: messageTexte,
+            heure: heure
+        });
+    });
+
+    afficherMessagesGroupe(groupe);
+}
+
 
 
 
@@ -579,11 +672,9 @@ export function afficherConversation(conversation) {
     }
 
     conversation.messages.forEach(msg => {
-        // On détermine si le message est envoyé par "moi"
-        // Exemple : msg.envoyeParMoi ou tu peux faire une comparaison sur msg.expediteur
+    
         const deMoi = msg.envoyeParMoi === true;
 
-        // On prépare un objet compatible avec envoieMessage
         const messagePourAffichage = {
             content: msg.contenu || msg.content || '',
             heure: msg.heure || '',
@@ -593,7 +684,6 @@ export function afficherConversation(conversation) {
         container.appendChild(messageDiv);
     });
 
-    // Optionnel : scroll automatique vers le bas de la discussion
     container.scrollTop = container.scrollHeight;
 }
 
@@ -613,23 +703,52 @@ export function genererMessageAutomatik(nom) {
 }
 
 
-  
-// export function afficherConversation(conversation) {
-//     const container = document.getElementById("discussion");
-//     container.innerHTML = "";
+export function supprimerDiscussion(numero) {
+    numero.forEach(element => {
+    const numb = element.getAttribute('numeroUser')
 
-//     if (!conversation || !conversation.messages) {
-//         container.innerHTML = "<p>Aucune conversation</p>";
-//         return;
-//     }
+            // console.log(element)
+        if (element.getAttribute('id') === 'selected' ) {
+            // console.log(numero)
+            const user = conversations.find(c=>c.numero === numb)
+            // console.log(user);
+            user.messages=[]
+            // console.log(user);
+            afficherConversation(conversations)        }
+        
+    });
 
-//     conversation.messages.forEach(msg => {
-//         const msgDiv = document.createElement("div");
-//         msgDiv.className = "p-2 my-1 rounded bg-gray-200";
-//         msgDiv.innerHTML = `
-//             <strong>${msg.expediteur || msg.destinataire || 'Inconnu'}</strong> : ${msg.contenu}
-//             <span class="text-xs text-gray-500 ml-2">${msg.heure}</span>
-//         `;
-//         container.appendChild(msgDiv);
-//     });
+    
+
+} 
+
+export function envoyerMessageDiffusion(message, numeros, zoneDiscussion) {
+    numeros.forEach(numero => {
+        const msg = {
+            content: message,
+            heure: getCurrentTime(),
+            envoyeParMoi: true,
+            destinataire: numero
+        };
+        const element = envoieMessage(msg, true); // Cette fonction doit créer le bloc message
+        zoneDiscussion.appendChild(element);
+    });
+
+    zoneDiscussion.scrollTop = zoneDiscussion.scrollHeight;
+}
+
+
+
+// export function supprimerDiscussion(numero) {
+//   conversations = conversations.filter(msg =>
+//     msg.destinataire !== numero && msg.expediteur !== numero
+//   );
+
+//   const zone = document.querySelector('#discussion');
+//   const contactActif = document.querySelector('.'); 
+
+//   if (contactActif && contactActif.dataset.numero === numero) {
+//     zone.innerHTML = '<p class="text-gray-400 text-center">Aucune discussion</p>';
+//   }
+
 // }

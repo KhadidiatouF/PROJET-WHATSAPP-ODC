@@ -1,3 +1,5 @@
+
+
 export const utilisateurs = [
     {
         nom:'Khadija',
@@ -7,8 +9,9 @@ export const utilisateurs = [
         etat:'Disponible',
         Online:true,
         archive: true,
-        login:"dija1",
-        mdp:"password"
+        login: "admin", 
+        mdp: "1234",
+        role: "admin"
 
 
     },
@@ -20,8 +23,9 @@ export const utilisateurs = [
         etat:'Disponible',
         Online:false,
         archive: false,
-        login:"bamba1",
-        mdp:"password"
+        login: "bamba", 
+        mdp: "pass123",
+         role: "membre" 
         
     },
     {
@@ -32,8 +36,9 @@ export const utilisateurs = [
         etat:'Disponible',
         Online:true,
         archive: false,
-        login:"oumy1",
-        mdp:"password"
+        login: "oumy", 
+        mdp: "pass123",
+         role: "membre" 
 
 
         
@@ -97,24 +102,16 @@ export const conversations = [
         nom: 'Khadija',
         prenom: 'Fall',
         profil: 'fille.jpg',
-        numero: '77889900',
+        numero: '778899000',
         etat: 'Disponible',
         Online: true,
         archive: false,
-        messages: [
-          {
-            expediteur: 'moi',
-            contenu: 'Wa baxna',
-            heure: '14:00',
-            lu: true
-          },
-          {
-            destinaire: 'oumy',
-            contenu: 'Bonsoir Tonss',
-            heure: '14:00',
-            lu: true
-          }
+       messages : [
+          { contenu: "Salut", destinataire: "778899001", envoyeParMoi: true },
+          { contenu: "Bonjour", destinataire: "778899000", envoyeParMoi: false },
+          { contenu: "Hey", destinataire: "778899001", envoyeParMoi: true }
         ]
+        
       },
     {
 
@@ -122,18 +119,16 @@ export const conversations = [
         nom:'Oumy',
         prenom:'Ndiaye',
         profil:'fille.jpg',
-        numero:'77889900',
+        numero:'778899001',
         etat:'Disponible',
         Online:true,
         archive: false,
-        messages: [
-            {
-              destinaire: 'moi',
-              contenu: 'No def ioe',
-              heure: '14:00',
-              lu: true
-            }
-          ],
+        messages : [
+          { contenu: "Salut", destinataire: "778899000", envoyeParMoi: true },
+          { contenu: "no def", destinataire: "778899001", envoyeParMoi: false },
+          { contenu: "Cool ni silonk", destinataire: "778899000", envoyeParMoi: true }
+        ]
+        ,
          destinaire:''
 
     },
@@ -146,14 +141,12 @@ export const conversations = [
         etat:'Disponible',
         Online:true,
         archive: false,
-        messages: [
-            {
-              destinataire: 'moi',
-              contenu: 'Aythia madame',
-              heure: '14:00',
-              lu: true
-            }
-          ],
+        messages : [
+          { contenu: "Salut", destinataire: "778899008", envoyeParMoi: true },
+          { contenu: "no def", destinataire: "778899007", envoyeParMoi: false },
+          { contenu: "Cool ni silonk", destinataire: "778899008", envoyeParMoi: true }
+        ]
+        
 
     },
     {
@@ -165,14 +158,12 @@ export const conversations = [
         etat:'Disponible',
         Online:true,
         archive: false,
-        messages: [
-            {
-              expediteur: 'moi',
-              contenu: 'beugouma li',
-              heure: '14:00',
-              lu: true
-            }
-          ],
+        messages : [
+          { contenu: "Ani samay liguey", destinataire: "778899007", envoyeParMoi: false },
+          { contenu: "Parégul dé", destinataire: "778899009", envoyeParMoi: true },
+          { contenu: "Souba dé dinga yeek", destinataire: "778899007", envoyeParMoi: false }
+        ]
+        ,
         expediteur:''
 
     },
