@@ -259,7 +259,10 @@ function ajoutUtilisateur() {
 
         ajout(utilisateurs, utilisateur);
         afficherUtilisateurs(utilisateurs); 
-
+        errorm.forEach(element => {
+            element.classList.add('hidden')
+            
+        });
         nom.value=''
         prenom.value=''
         numero.value=''
@@ -271,37 +274,47 @@ function ajoutUtilisateur() {
 
 ajoutGroupeBtn.addEventListener('click', () => {
     const nomGroupe = nomGroupeInput.value.trim();
-
+    const errorgrp = document.querySelector('#page2 small');
+    console.log(errorgrp)
+    // Reset des classes de couleur
+    errorgrp.classList.remove('text-red-600', 'text-green-600');
+    errorgrp.classList.remove('hidden');
 
     if (nomGroupe === '') {
-      alert('Ce champs ne doit pas etre vide.');
-    }else if(!isNaN(nomGroupe) && nomGroupe !== ''){
-        alert('Ce champs doit etre une chaine')
-    }else if( nomGroupe.length <2 ){
-        alert('Le nom du groupe doit etre superieur ou égal à 5 lettres')
-    }else {
-        
-    const choix = Array.from(membresSelect.selectedOptions);
-    if (choix.length === 1) {
-        alert("Veuillez sélectionner au moins deux membres.");
-        return;
+        errorgrp.textContent = 'Ce champ ne doit pas être vide.';
+        errorgrp.classList.add('text-red-600');
+
+    } else if (!isNaN(nomGroupe)) {
+        errorgrp.textContent = 'Ce champ doit être une chaîne.';
+        errorgrp.classList.add('text-red-600');
+
+    } else if (nomGroupe.length < 2) {
+        errorgrp.textContent = 'Le nom du groupe doit être supérieur ou égal à 5 lettres.';
+        errorgrp.classList.add('text-red-600');
+
+    } else {
+        const choix = Array.from(membresSelect.selectedOptions);
+        if (choix.length < 2) {
+            errorgrp.textContent = 'Veuillez sélectionner au moins deux membres.';
+            errorgrp.classList.add('text-red-600');
+            return;
+        }
+
+        const membres = choix.map(opt => utilisateurs[opt.value]);
+        const groupe = creerGroupe(nomGroupe);
+        groupe.membres = membres;
+
+        ajoutGroupe(groupes, groupe);
+        afficherGroupes(groupes);
+
+        nomGroupeInput.value = '';
+        membresSelect.selectedIndex = -1;
+
+        errorgrp.textContent = 'Groupe créé avec succès !';
+        errorgrp.classList.add('text-green-600');
     }
+});
 
-    const membres = choix.map(opt => utilisateurs[opt.value]);
-
-    const groupe = creerGroupe(nomGroupe);
-    groupe.membres = membres;
-
-    
-    ajoutGroupe(groupes, groupe);
-    afficherGroupes(groupes);
-
-    nomGroupeInput.value = '';
-    membresSelect.selectedIndex = -1;
-   
-      alert('Groupe créé avec succès.');
-    }
-  });
 
 }
 

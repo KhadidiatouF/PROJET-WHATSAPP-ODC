@@ -25,7 +25,7 @@ export const utilisateurs = [
         archive: false,
         login: "bamba", 
         mdp: "pass123",
-         role: "membre" 
+        role: "membre" 
         
     },
     {
@@ -38,7 +38,8 @@ export const utilisateurs = [
         archive: false,
         login: "oumy", 
         mdp: "pass123",
-         role: "membre" 
+        
+        role: "membre" 
 
 
         

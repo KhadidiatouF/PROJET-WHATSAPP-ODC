@@ -176,7 +176,7 @@ export function genererNomEtPrenomUnique(nom, prenom, utilisateurs) {
 
 export function afficherUtilisateurs(utilisateurs) {
     const listeU = document.getElementById("liste-utilisateurs");
-  
+    afficherConversation
 
     // listeU.innerHTML = ""; 
 
@@ -302,52 +302,142 @@ export function creerGroupe(nomG, nom, prenom,numero) {
 export function ajoutGroupe(listeGroupes, groupe) {
     listeGroupes.push(groupe);
 }
+function preparerFormulaireAjoutMembre(groupe, index, utilisateurs) {
+    const page2 = document.getElementById('page2');
+    const inputNomGroupe = document.getElementById('group-name');
+    const selectMembres = document.getElementById('group-members');
+    const bouton = document.getElementById('ajouter-groupe');
+
+    // Affiche le formulaire
+    page2.classList.remove('hidden');
+
+    // Préremplit et désactive le champ nom
+    inputNomGroupe.value = groupe.nom;
+    inputNomGroupe.disabled = true;
+
+    // Vide et remplit le select avec les utilisateurs non-membres
+    selectMembres.innerHTML = '';
+    const nonMembres = utilisateurs.filter(u => !groupe.membres.some(m => m.numero === u.numero));
+    nonMembres.forEach(user => {
+        const opt = document.createElement("option");
+        opt.value = user.numero;
+        opt.textContent = `${user.nom} ${user.prenom}`;
+        selectMembres.appendChild(opt);
+    });
+
+    // Change le texte du bouton
+    bouton.textContent = 'Ajouter Membre';
+
+    // Nettoie tout ancien listener
+    const nouveauBtn = bouton.cloneNode(true);
+    bouton.parentNode.replaceChild(nouveauBtn, bouton);
+
+    nouveauBtn.addEventListener('click', () => {
+        const selectedOptions = Array.from(selectMembres.selectedOptions);
+        selectedOptions.forEach(option => {
+            const numero = option.value;
+            const utilisateur = utilisateurs.find(u => u.numero === numero);
+            if (utilisateur && !groupe.membres.some(m => m.numero === numero)) {
+                groupe.membres.push(utilisateur);
+            }
+        });
+
+        inputNomGroupe.disabled = false;
+        nouveauBtn.textContent = 'Créer le Groupe';
+        page2.classList.add('hidden');
+        afficherGroupes(listeGroupes);
+    });
+}
 
 
 export function afficherGroupes(listeGroupes) {
     const groupCible = document.querySelector('.group1');
     groupCible.innerHTML = ''; 
 
-
-    listeGroupes.forEach((groupe) => {
-
-    // let initials = groupe.nomG.charAt(0).toUpperCase() 
-
-        // console.log(groupe.nomG);
-        
+    listeGroupes.forEach((groupe, index) => {
         const div = document.createElement('div');
-        // <div  class="font-bold"> ${groupe.membres[0].nom}  ${groupe.membres[1].nom} </div>
 
-        // div.innerHTML = `<h4>Groupe ${index + 1} : ${groupe.nom}</h4><ul>${groupe.membres.map(m => `<li>${m.nom} ${m.prenom}</li>`).join('')}</ul>`;
-        div.innerHTML= `
-                <div class="group1 bg-white flex justify-between w-full h-20 mt-5  rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400">
-                    <div class="items-center flex justify-between gap-5 ">
-                      <div class="w-16 h-16 ml-5 flex  bg-gray-600 text-white flex-row  items-center justify-center rounded-full">   </div>
-                      <div class="text-sm ">
-                        <div  class="font-bold"> ${groupe.nom} </div>
-                        <div  class="font-bold"> ${groupe.membres[0].nom}   ${groupe.membres[0].prenom},  ${groupe.membres[1].nom} ${groupe.membres[1].prenom} </div>
-                      </div>
-
+        div.innerHTML = `
+            <div class="group1 bg-white flex justify-between w-full h-[6.5rem] mt-5 rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400 relative">
+                <div class="items-center flex justify-between gap-5">
+                    <div class="w-16 h-16 ml-5 flex bg-gray-600 text-white items-center justify-center rounded-full">G</div>
+                    <div class="text-sm">
+                        <div class="font-bold">${groupe.nom}</div>
+                        <div class="font-bold">
+                            ${groupe.membres.map(m => `${m.nom} ${m.prenom}`).join(', ')}
+                        </div>
                     </div>
-                  
-                    <div class="text-sm mr-0" >
-                        <div class="text-green-500">12:00</div>
-                        <div class=" text-xs text-green-500 "><i class="fa-solid fa-circle"></i></div>
-                    </div>
-
-                    
-
                 </div>
-                             
-                `
-                div.addEventListener("click", () => {
-                    groupeActif = groupe;
-                    afficherMessagesGroupe(groupe);  
-                });
+                <div class="text-sm mr-4 text-right">
+                    <div class="text-green-500">12:00</div>
+                    <div class="text-xs text-green-500"><i class="fa-solid fa-circle"></i></div>
+                    <button class="ajout-membre-btn text-blue-600 underline text-xl mt-1"><i class="fa-solid fa-users-line"></i></button>
+                </div>  
+            </div>
+        `;
+
+        // 📌 Événement : clique sur le groupe pour voir les messages
+        div.querySelector('.group1').addEventListener("click", () => {
+            groupeActif = groupe;
+            afficherMessagesGroupe(groupe);  
+        });
+
+        // 📌 Événement : clique sur le bouton "Ajouter membre"
+        div.querySelector('.ajout-membre-btn').addEventListener('click', (e) => {
+            e.stopPropagation(); // évite que le clic ouvre les messages du groupe
+
+           
+            preparerFormulaireAjoutMembre(groupe, index, utilisateurs);
+        });
+
         groupCible.appendChild(div);
     });
-    // ajoutGroupe(listeGroupes)
 }
+
+
+
+// export function afficherGroupes(listeGroupes) {
+//     const groupCible = document.querySelector('.group1');
+//     groupCible.innerHTML = ''; 
+
+
+//     listeGroupes.forEach((groupe) => {
+
+//     // let initials = groupe.nomG.charAt(0).toUpperCase() 
+
+//         // console.log(groupe.nomG);
+        
+//         const div = document.createElement('div');
+//         // <div  class="font-bold"> ${groupe.membres[0].nom}  ${groupe.membres[1].nom} </div>
+
+//         // div.innerHTML = `<h4>Groupe ${index + 1} : ${groupe.nom}</h4><ul>${groupe.membres.map(m => `<li>${m.nom} ${m.prenom}</li>`).join('')}</ul>`;
+//         div.innerHTML= `
+//                 <div class="group1 bg-white flex justify-between w-full h-[5rem] mt-5  rounded-2xl space-y-4 cursor-pointer hover:bg-gray-400">
+//                     <div class="items-center flex justify-between gap-5 ">
+//                       <div class="w-16 h-16 ml-5 flex  bg-gray-600 text-white flex-row  items-center justify-center rounded-full">   </div>
+//                       <div class="text-sm ">
+//                         <div  class="font-bold"> ${groupe.nom} </div>
+//                         <div  class="font-bold"> ${groupe.membres[0].nom}   ${groupe.membres[0].prenom},  ${groupe.membres[1].nom} ${groupe.membres[1].prenom} </div>
+//                       </div>
+
+//                     </div>
+                  
+//                     <div class="text-sm mr-0" >
+//                         <div class="text-green-500">12:00</div>
+//                         <div class=" text-xs text-green-500 "><i class="fa-solid fa-circle"></i></div>
+//                     </div>  
+
+//                 </div>
+                             
+//                 `
+//                 div.addEventListener("click", () => {
+//                     groupeActif = groupe;
+//                     afficherMessagesGroupe(groupe);  
+//                 });
+//         groupCible.appendChild(div);
+//     });
+//     // ajoutGroupe(listeGroupes)
+// }
 
 export function afficherMessagesGroupe(groupe) {
     const container = document.getElementById("discussion");
@@ -577,10 +667,9 @@ export function envoieMessage(message, deMoi = true) {
     
   
     divParent.innerHTML = `
-      <div class="text-black justify-between w-80 gap-10 h-20 
+      <div class="text-black justify-between w-80 gap-5 h-20 
         ${deMoi ? 'bg-[#45CA42] rounded-s-xl rounded-tr-xl mr-3' : 'bg-[#E5E5EA] rounded-e-xl rounded-tl-xl ml-3'}
-        flex items-center"
-      >
+        flex items-center mt-10">
         <div class="text-xl font-medium ml-2 break-words overflow-hidden w-full">      
             ${texte}
         </div>
